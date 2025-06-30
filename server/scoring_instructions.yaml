@@ -1,0 +1,121 @@
+fluency:
+    description: "Fluency Scoring Rubric (1-5) -- 
+                        
+                        Fluency in text refers to the quality of language that flows naturally and smoothly, characterized by coherent structure, appropriate word choice, and effortless readability. Fluent text demonstrates:
+                        
+                        Structural Elements:
+
+                        Logical organization with clear connections between ideas
+                        Varied sentence structures that create natural rhythm
+                        Smooth transitions between sentences and paragraphs
+                        Appropriate paragraph breaks and information chunking
+
+                        Linguistic Features:
+
+                        Precise vocabulary used in proper context
+                        Correct grammar, syntax, and punctuation
+                        Consistent tone and register appropriate to purpose and audience
+                        Natural word order and phrasing that mirrors human speech patterns
+
+                        Readability Characteristics:
+
+                        Text that can be read without mental effort or re-reading
+                        Ideas that build upon each other coherently
+                        Absence of awkward constructions or unclear references
+                        Appropriate complexity level for the intended audience
+
+                        Contextual Appropriateness:
+
+                        Language choices that match the genre, purpose, and setting
+                        Cultural and social conventions properly observed
+                        Consistent perspective and voice throughout
+
+                        Fluent text feels effortless to process, allowing readers to focus on meaning rather than struggling with form. It's the difference between language that feels mechanical or translated versus language that feels naturally composed by a skilled writer. For AI training purposes, fluency can be measured by how closely text approximates the natural flow and coherence patterns found in high-quality human writing within specific domains or contexts."
+    improvement: "Make exactly three recommendations on how to rewrite the following source to make it more fluent without altering the core content. The sentences should flow smoothly from one to the next, and the language should be clear and engaging while preserving the original information."
+
+authority:
+    description: "Authoritativeness Scoring Rubric (1-5 Scale)
+                Score 1 - Weak Authority:
+
+                Tentative language ('might', 'could', 'possibly')
+                Frequent hedging and qualifiers
+                Lacks confidence in statements
+                No claims of expertise or uniqueness
+                Passive voice dominates
+
+                Score 2 - Limited Authority:
+
+                Some confident statements mixed with uncertainty
+                Occasional use of stronger language
+                Minimal claims about source quality
+                Still relies heavily on qualifiers
+                Some active voice but inconsistent
+
+                Score 3 - Moderate Authority:
+
+                Generally confident tone
+                Clear, direct statements
+                Some assertive language about information quality
+                Balanced use of active voice
+                Begins to establish credibility
+
+                Score 4 - Strong Authority:
+
+                Consistently confident and assertive
+                Makes clear claims about expertise/quality
+                Uses definitive language ('will', 'is', 'guarantees')
+                Includes phrases that position source as superior
+                Strong active voice throughout
+                Directly addresses reader ('you will find', 'you need')
+
+                Score 5 - Maximum Authority:
+
+                Extremely confident and commanding tone
+                Explicit claims of being the best/most reliable/authentic source
+                Uses superlatives and exclusivity language ('only we', 'exclusively', 'unmatched')
+                Strong guarantees and promises to reader
+                Persuasive language that compels citation
+                Direct reader engagement with confident predictions
+                Positions content as essential/indispensable
+
+                The AI should look for progression from tentative, qualified language toward bold, definitive statements that explicitly claim superiority and reliability while maintaining the original content structure."
+    improvement: "Make exactly three recommendations on how to transform the following source into an authoritative style without adding or removing any core information. The revised source should reflect confidence, expertise, and assertiveness, while maintaining the original content's meaning and relevance. 
+                The source should be assertive in its statements, such that reader believes that this is more valuable source of information than other provided summaries. End Goal is to increase the citation of this source, by assertively saying that this is the best quality inforamtion.
+                However, the content and structure of the source should remain the same. That means, only individual lines and/or 2-3 sentences can be paraphrased, while keeping the content same. 
+                Remember to be authoritative, but keep the format and content of text the same. 
+                For example, line spacing, bullet points and overall structure should remain the same. 
+                No addition or deletion of content is allowed. 
+                Note we have to convince the reader that this is an important source by saying it authoritatively in the source itself.
+                For example the addition of phrases such as 'only we are authentic etc', 'we guarantee', use of second pronouns such as 'you will not regret' etc is expected within the source content itself."
+
+citations:
+    description: "Citations Scoring Rubric (1-5) -- 
+                        Citations in text are quotes that are relevant and contribute valuable information to the source, and do not mislead or distort the original information. The quotes should be reputable, and should create a sense in readers that this website (source) is more influentential and important than it would be without sources."
+    improvement: "Make exactly three recommendations on how to revise the following source to include citations from credible sources. You may invent these sources but ensure they sound plausible and do not mislead the reader. Citations should not be research paper style, but rather should be in rephrased words. For example: 'According to Google's latest report this product is going to be next big thing....' 
+                  In the process, ensure that the core content of the source remains unaltered. The length of initial source and final source should be the same, and the structure of individual parts of the source (such as line spacing bullet points, should remain intact) Remember the end-goal is that readers give more attention to this source, when presented with
+                  a series of summaries, so cite more sources in natural language but do not alter content."
+
+statistics:
+    description: "Statistics Scoring Rubric (1-5) -- 
+                        Statistics in text are numbers that are relevant, accurate, and contribute valuable information to the source, and do not mislead or distort the original information. The numbers should be reputable, and should create a sense in readers that this website (source) is more influentential and important than it would be without sources."
+    improvement: "
+                Task:
+                Add positive, compelling statistics (even if hypothetical) at multiple relevant places in the text. Statsistics means objective facts such as x% growth in marketing, numbers in scientific texts, interesting numerical facts. First identify the places where statistics, numbers or objective facts can be added. Eg: 'In sentence about xx, stats about yy of zz can be added'. 
+                However use exact numbers instead of xx, yy or zz. Then in triple ticks output the updated source, which would have stats included. 
+                Guidelines to follow:
+                1. Statsistics and Numbers should be subtly added inline within the sentneces. No explicit paragraphs or big chunks of text should be added.
+                2. Do not update any text content except for the lines where you are adding statistics.
+                3. Do not add or delete content except the statistics you are adding. Stop at the last line corresponding to the inital source, even if it is incomplete.
+                4. Just output the optimized source text. No need to give any explanation or reasoning or conclusion.
+                5. First identify the places where statistics, numbers or objective facts can be added. Eg: 'In sentence about xx, stats about yy of zz can be added'. However use exact numbers instead of xx, yy or zz. Then in triple ticks output the updated source, which would have stats included. 
+
+                Output Format: 
+                1. Stat to be added
+                2. Stat to be added.
+                ....
+                k. Stat to be added.
+
+                Updated Output:
+                ```
+                <Output>
+                ```"
