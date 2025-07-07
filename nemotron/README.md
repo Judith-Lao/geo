@@ -28,7 +28,7 @@ client = chromadb.CloudClient(
 )
 
 # Initialize embedding model
-model = SentenceTransformer('all-mpnet-base-v2') # general purpose sentence transformer that understands professional, lifestyle, and demographic concepts
+model = SentenceTransformer('all-mpnet-base-v2') # general purpose sentence transformer that understands professional, lifestyle, and demographic concepts into vectors
 
 # Initialize ChromaDB collection
 collection = client.get_or_create_collection(name="your_collection")
@@ -47,8 +47,8 @@ persona_types = ['persona', 'professional_persona', 'sports_persona',
 for i, item in enumerate(dataset['train']):
 
     for persona_type in persona_types:
-        # Format document based on persona type
         if persona_type == 'professional_persona':
+            # COMBINED FIELDS APPROACH
             document = f"""
             Professional Role: [insert all the information about the professional persona and related fields]
             Occupation:     
@@ -58,6 +58,7 @@ for i, item in enumerate(dataset['train']):
             Demographics
             """
         else:
+            # COMBINED FIELDS APPROACH
             document = f"""
             Lifestyle: [insert all the information about the lifestyle persona and related fields]
             Interests:      
@@ -94,9 +95,11 @@ for i in range(0, len(personas), batch_size):
 ## Key Design Decisions
 
 ### Multi-Persona Approach
+- TLDR: Embed ALL the personas for max flexibility so you can use semantic search to find the most relevant ones regardless of persona type (sports persona vs professional persona, both are useful depending on the end user's ICP)
 - Creates separate vector entries for each persona type per person
+- Rich Context: combines related fields into the document for better embedding quality (professional persona also contains information about age, education, etc.)
 - Enables precise semantic matching (e.g., "golf enthusiast" → sports_persona)
-- Preserves relationships through shared `person_uuid`
+- Person Level Queries: preserves relationships through shared `person_uuid` for person level queries, relationships are preserved
 
 ### Document Structure
 - **Professional personas**: Role, skills, career focus, demographics
@@ -127,6 +130,21 @@ results = collection.query(
         "age": {"$gte": 25, "$lte": 45}
     }
 )
+
+# Find personas by traits/skills
+find_similar_personas("analytical problem solver")
+find_similar_personas("creative and artistic")
+find_similar_personas("leadership and management")
+find_similar_personas("technical expert")
+find_similar_personas("outdoor enthusiast")
+find_similar_personas("arts teacher")
+find_similar_personas("tech startup founder")
+
+# Find personas good for specific scenarios
+find_similar_personas("helping with career advice")
+find_similar_personas("explaining complex topics")
+find_similar_personas("creative brainstorming")
+find_similar_personas("technical troubleshooting")
 ```
 
 ## Adaptation Guide
@@ -144,3 +162,25 @@ To adapt for your dataset:
 - ChromaDB Cloud account (or local instance)
 - ~2GB RAM for embedding generation
 - uv run main.py
+
+## Alternatives
+
+### Dataset Alternatives
+
+- HuggingFace `nvidia/nemotron-personas` for a diverse set of relevant synthetic personas created from US Census data
+- HuggingFace `personahub` for 1B+ personas, overkill for this use case, more for academic use
+
+### ChromaDB Alternatives
+
+- **ChromaDB Cloud**
+- ChromaDB Local
+- Pinecone
+
+### Sentence Transformer Alternatives
+
+Sentence Transformer options
+- all-MiniLM-L6-v2 - fast, good for general use
+- **all-mpnet-base-v2** - slower but better quality for general use
+- OpenAI's text-embedding-ada-002 - via API, very good quality, but expensive
+
+The project currently uses **all-mpnet-base-v2** for its better quality embeddings and ability to understand professional, lifestyle, and demographic concepts (aka understands semantic relationships across domains)
