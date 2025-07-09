@@ -50,7 +50,7 @@ export function ContentForm() {
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
   })
-  console.log("isLoading", isLoading)
+
   async function onSubmit(data: z.infer<typeof FormSchema>) {
     const { content } = data;
     setIsLoading(true);
