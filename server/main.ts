@@ -1,9 +1,12 @@
+import dotenv from 'dotenv';
 import Anthropic from '@anthropic-ai/sdk';
 import express from 'express'
 import cors from 'cors'
 import bodyParser from 'body-parser'
 import yaml from 'js-yaml'
 import fs from 'fs'
+
+dotenv.config({ path: new URL('../.env', import.meta.url).pathname });
 
 // Read and parse YAML file
 const scoringInstructions = yaml.load(fs.readFileSync('./server/scoring_instructions.yaml', 'utf8')) as {
@@ -161,6 +164,7 @@ app.post('/explain_fluency_score', async (req, res) => {
 
 app.post('/assign_fluency_score', async (req, res) => {
     console.log("[Route] /assign_fluency_score")
+    console.log("here", process.env.ANTHROPIC_API_KEY)
     try {
         const { content } = req.body;
         if (!content) {

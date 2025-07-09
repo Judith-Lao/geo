@@ -50,25 +50,39 @@ export function ContentForm() {
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
   })
-
+  console.log("isLoading", isLoading)
   async function onSubmit(data: z.infer<typeof FormSchema>) {
     const { content } = data;
     setIsLoading(true);
-    const res = await fetch('http://localhost:8000/assign_fluency_score', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ content }),
-    });
-    const scoreJson = await res.json();
-    const { fluency, citations, statistics, authority } = JSON.parse(scoreJson.text);
-
-    setFluency(fluency);
-    setCitations(citations);
-    setStatistics(statistics);
-    setAuthority(authority);
-    setIsLoading(false);
+    try {
+      const res = await fetch('http://localhost:8000/assign_fluency_score', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ content }),
+      });
+      if (!res.ok) {
+        const error = await res.json();
+        if (error.message?.includes('overloaded_error')) {
+          console.error('Anthropic API is currently overloaded. Please try again in a few minutes.');
+        } else {
+          console.error('Error analyzing content. Please try again.');
+        }
+        setIsLoading(false);
+        return;
+      }
+      const resJson = await res.json();
+      const { fluency, citations, statistics, authority } = JSON.parse(resJson.text);
+      setFluency(fluency);
+      setCitations(citations);
+      setStatistics(statistics);
+      setAuthority(authority);
+      setIsLoading(false);
+    } catch (error: any) {
+      console.error("Error analyzing content:", error)
+      setIsLoading(false);
+    }
   }
 
   // async function onSubmit(data: z.infer<typeof FormSchema>) {
@@ -131,7 +145,7 @@ export function ContentForm() {
             />
             <div className="flex-row space-x-2">
               {isLoading ? <Button type="submit" className="">Analyzing<LoadingDots color="white" /></Button> : <Button type="submit" className="">Analyze</Button>}
-              {fluency.score > 0 && (<SheetTrigger><Button variant="outline">View Recommendations</Button></SheetTrigger>)}
+              {fluency.score > 0 && (<SheetTrigger><Button variant="outline" type="button">View Recommendations</Button></SheetTrigger>)}
             </div>
           </form>
         </Form>
