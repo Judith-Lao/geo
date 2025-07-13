@@ -6,6 +6,7 @@ import { Suspense } from "react";
 import { Analytics as VercelAnalytics } from "@vercel/analytics/react";
 import Navbar from "@/components/layout/navbar";
 import { ClerkProvider } from "@clerk/nextjs";
+import { Toaster } from "@/components/components/ui/sonner"
 
 export const metadata = {
   title: "Precedent - Building blocks for your Next.js project",
@@ -32,6 +33,7 @@ export default async function RootLayout({
           </main>
           <Footer />
           <VercelAnalytics />
+          <Toaster />
         </body>
       </html>
     </ClerkProvider>

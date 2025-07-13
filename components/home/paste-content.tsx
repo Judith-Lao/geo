@@ -27,6 +27,7 @@ import {
 import { Textarea } from "@/components/components/ui/textarea"
 import { useState } from "react"
 import { Badge } from "../components/ui/badge"
+import { toast } from "sonner"
 
 const FormSchema = z.object({
   content: z
@@ -39,12 +40,13 @@ const FormSchema = z.object({
     }),
 })
 
-export function PasteContent() {
+export function PasteContent({ marketingContent, setMarketingContent }: { marketingContent: string, setMarketingContent: (marketingContent: string) => void }) {
   const [fluency, setFluency] = useState({ score: 0, recommendations: [] });
   const [citations, setCitations] = useState({ score: 0, recommendations: [] });
   const [statistics, setStatistics] = useState({ score: 0, recommendations: [] });
   const [authority, setAuthority] = useState({ score: 0, recommendations: [] });
   const [isLoading, setIsLoading] = useState(false);
+  
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
   })
@@ -71,18 +73,25 @@ export function PasteContent() {
         return;
       }
       const resJson = await res.json();
+      console.log("resJson.text", resJson.text)
+      if (typeof resJson.text === 'string') {
+        toast(`I noticed you submitted text that doesn't look like marketing content. Please paste in the appropriate content and I'll analyze it according to proven GEO methods.`);
+        setIsLoading(false);
+        return;
+      }
       const { fluency, citations, statistics, authority } = JSON.parse(resJson.text);
       setFluency(fluency);
       setCitations(citations);
       setStatistics(statistics);
       setAuthority(authority);
       setIsLoading(false);
+      setMarketingContent(content);
     } catch (error: any) {
       console.error("Error analyzing content:", error)
       setIsLoading(false);
     }
   }
-
+  console.log("marketingContent", marketingContent)
   // async function onSubmit(data: z.infer<typeof FormSchema>) {
   //   const { content } = data;
   //   const streamResponse = await fetch('http://localhost:8000/assign_fluency_score', {
@@ -129,7 +138,7 @@ export function PasteContent() {
                   <FormLabel>Marketing Content</FormLabel>
                   <FormControl>
                     <Textarea
-                      placeholder="Copy and paste a blog post here."
+                      placeholder={marketingContent ? marketingContent : "Copy and paste a blog post here."}
                       className="resize-none max-w-screen-md h-64"
                       {...field}
                     />

@@ -34,7 +34,7 @@ export function BreadcrumbWithCustomSeparator({step, setCurrentStep}: {step: num
             Enter Your ICP
           </BreadcrumbItem>
         )}
-        <BreadcrumbSeparator>
+        {/* <BreadcrumbSeparator>
           <SlashIcon />
         </BreadcrumbSeparator>
         {step === 2 ? (
@@ -45,7 +45,7 @@ export function BreadcrumbWithCustomSeparator({step, setCurrentStep}: {step: num
           <BreadcrumbItem onClick={() => setCurrentStep(2)} className="cursor-pointer">
             Hyper-target Your ICP
           </BreadcrumbItem>
-        )}
+        )} */}
       </BreadcrumbList>
     </Breadcrumb>
   )
