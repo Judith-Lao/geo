@@ -73,12 +73,6 @@ export function PasteContent({ marketingContent, setMarketingContent }: { market
         return;
       }
       const resJson = await res.json();
-      console.log("resJson.text", resJson.text)
-      if (typeof resJson.text === 'string') {
-        toast(`I noticed you submitted text that doesn't look like marketing content. Please paste in the appropriate content and I'll analyze it according to proven GEO methods.`);
-        setIsLoading(false);
-        return;
-      }
       const { fluency, citations, statistics, authority } = JSON.parse(resJson.text);
       setFluency(fluency);
       setCitations(citations);
@@ -87,7 +81,7 @@ export function PasteContent({ marketingContent, setMarketingContent }: { market
       setIsLoading(false);
       setMarketingContent(content);
     } catch (error: any) {
-      console.error("Error analyzing content:", error)
+      toast(`I noticed you submitted text that doesn't look like marketing content. Please paste in the appropriate content and I'll analyze it according to proven GEO methods.`);
       setIsLoading(false);
     }
   }

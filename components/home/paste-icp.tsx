@@ -26,7 +26,7 @@ const FormSchema = z.object({
     }),
 })
 
-export function PasteICP() {
+export function PasteICP({ icp, setICP }: { icp: string, setICP: (icp: string) => void }) {
   const [isLoading, setIsLoading] = useState(false);
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -81,7 +81,7 @@ export function PasteICP() {
                     <FormControl>
                         <Input
                         className="w-2/3 mx-auto text-center"
-                        placeholder="Enter Your ICP here."
+                        placeholder={icp ? icp : "Enter Your ICP here."}
                         {...field}
                         />
                     </FormControl>
