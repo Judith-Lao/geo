@@ -36,35 +36,32 @@ export function PasteICP({ icp, setICP }: { icp: string, setICP: (icp: string) =
     const { content } = data;
     setIsLoading(true);
     // TODO: implement backend search-ICP route
-    // try {
-    //   const res = await fetch('http://localhost:8000/search_ICP', {
-    //     method: 'POST',
-    //     headers: {
-    //       'Content-Type': 'application/json',
-    //     },
-    //     body: JSON.stringify({ content }),
-    //   });
-    //   if (!res.ok) {
-    //     const error = await res.json();
-    //     if (error.message?.includes('overloaded_error')) {
-    //       console.error('Anthropic API is currently overloaded. Please try again in a few minutes.');
-    //     } else {
-    //       console.error('Error analyzing content. Please try again.');
-    //     }
-    //     setIsLoading(false);
-    //     return;
-    //   }
-    //   const resJson = await res.json();
-    // //   const { fluency, citations, statistics, authority } = JSON.parse(resJson.text);
-    // //   setFluency(fluency);
-    // //   setCitations(citations);
-    // //   setStatistics(statistics);
-    // //   setAuthority(authority);
-    //   setIsLoading(false);
-    // } catch (error: any) {
-    //   console.error("Error analyzing content:", error)
-    //   setIsLoading(false);
-    // }
+    try {
+      const res = await fetch('http://localhost:8000/search_ICP', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ content }),
+      });
+      if (!res.ok) {
+        const error = await res.json();
+        if (error.message?.includes('overloaded_error')) {
+          console.error('CHROMA is currently overloaded. Please try again in a few minutes.');
+        } else {
+          console.error('Error pulling ICP. Please try again.');
+        }
+        setIsLoading(false);
+        return;
+      }
+      const resJson = await res.json();
+      console.log("resJson", resJson)
+      setICP(resJson);
+      setIsLoading(false);
+    } catch (error: any) {
+      console.error("Error pulling ICP:", error)
+      setIsLoading(false);
+    }
   }
 
   return (
