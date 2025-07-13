@@ -18,7 +18,7 @@ export function BreadcrumbWithCustomSeparator({
   setCurrentStep: (step: number) => void;
   completedSteps: Set<number>;
 }) {
-  // TODO: rn it can go anywhere, implement: can only step forwards if previous step is completed, can only step backwards if previous step is completed
+  // design decision: rn step 0 and 1 are independent, step 2 depends on both step 0 and 1 being completed. 
   return (
     <Breadcrumb>
       <BreadcrumbList>
@@ -30,9 +30,10 @@ export function BreadcrumbWithCustomSeparator({
           <BreadcrumbItem 
             onClick={() => {
               // Can only go back to step 0 if we're not on step 0 and step 0 is completed
-              if (step > 0 && completedSteps.has(0)) {
-                setCurrentStep(0);
-              }
+              // if (step > 0 && completedSteps.has(0)) {
+              //   setCurrentStep(0);
+              // }
+              setCurrentStep(0);
             }} 
             className="cursor-pointer"
           >
@@ -40,7 +41,7 @@ export function BreadcrumbWithCustomSeparator({
           </BreadcrumbItem>
         )}
         <BreadcrumbSeparator>
-          <SlashIcon />
+          +
         </BreadcrumbSeparator>
         {step === 1 ? (
           <BreadcrumbPage>
@@ -50,13 +51,14 @@ export function BreadcrumbWithCustomSeparator({
           <BreadcrumbItem 
             onClick={() => {
               // Can only go back to step 1 if we're not on step 1 and step 1 is completed
-              if (step > 1 && completedSteps.has(1)) {
-                setCurrentStep(1);
-              }
-              // Can only go forward to step 1 if step 0 is completed
-              if (step === 0 && completedSteps.has(0)) {
-                setCurrentStep(1);
-              }
+              // if (step > 1 && completedSteps.has(1)) {
+              //   setCurrentStep(1);
+              // }
+              // Can only go forward to step 1 if step 0 is completed -- commented out so you can go to step 0 or 1 independently, like an a + b = c equation, a and b should be independent
+              // if (step === 0 && completedSteps.has(0)) {
+              //   setCurrentStep(1);
+              // }
+              setCurrentStep(1);
             }} 
             className="cursor-pointer"
           >
@@ -64,7 +66,7 @@ export function BreadcrumbWithCustomSeparator({
           </BreadcrumbItem>
         )}
         <BreadcrumbSeparator>
-          <SlashIcon />
+          =
         </BreadcrumbSeparator>
         {step === 2 ? (
           <BreadcrumbPage>
