@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form"
 import { z } from "zod"
 import { Button } from "@/components/components/ui/button"
 import { LoadingDots } from "@/components/shared/icons";
+import { BreadcrumbWithCustomSeparator } from "@/components/home/custom-breadcrumbs";
 
 import {
   Form,
@@ -114,6 +115,7 @@ export function ContentForm() {
 
   return (
     <Sheet>
+      <BreadcrumbWithCustomSeparator/>
       <div className="flex-row rounded-lg border p-4 bg-white">
         <div className="flex-row space-x-2 justify-self-end">
           {isLoading ? <Badge variant="outline">Fluency <LoadingDots /></Badge> : <Badge variant="outline">Fluency: {fluency.score}</Badge>}

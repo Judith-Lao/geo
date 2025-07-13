@@ -1,6 +1,7 @@
 import { ContentForm } from "@/components/home/content-form";
 
-export default async function Home() {
+export default function AppPage() {
+
   return (
     <>
       <div className="z-10 w-full max-w-screen-md px-5 xl:px-0">
@@ -20,16 +21,16 @@ export default async function Home() {
         >
           Rank in ChatGPT Search with Generative Engine Optimization
         </h1>
-        <p
+        {/* <p
           className="mt-6 animate-fade-up text-center text-gray-500 opacity-0 [text-wrap:balance] md:text-xl"
           style={{ animationDelay: "0.25s", animationFillMode: "forwards" }}
         >
           Increase your website visibility and implement textual modifications independent of the exact queries of your customers.
-        </p>
+        </p> */}
       </div>
-      {/* <div className="my-10 grid w-full max-w-screen-md animate-fade-up grid-cols-1 gap-5 px-5 xl:px-0" style={{ animationDelay: "0.25s", animationFillMode: "forwards" }}>
+      <div className="my-10 grid w-full max-w-screen-md animate-fade-up duration-1500 grid-cols-1 gap-5 px-5 xl:px-0" style={{ animationDelay: "0.25s", animationFillMode: "forwards" }}>
         <ContentForm/>
-      </div> */}
+      </div>
     </>
   );
 }
