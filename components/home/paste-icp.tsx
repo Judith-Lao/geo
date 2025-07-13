@@ -14,6 +14,7 @@ import {
 } from "@/components/components/ui/form"
 import { useState } from "react"
 import { Input } from "../components/ui/input"
+import { PersonBackground } from "./person-background"
 
 const FormSchema = z.object({
   content: z
@@ -114,7 +115,27 @@ const stubbed = [
     }
 ]
 
+export interface ICP {
+  distance: number;
+  document: string;
+  metadata: {
+      age: number;
+      bachelors_field: string;
+      city: string;
+      education_level: string;
+      marital_status: string;
+      occupation: string;
+      person_uuid: string;
+      persona_type: string;
+      sex: string;
+      state: string;
+      zipcode: string;
+  };
+}
+
 export function PasteICP({ icp, setICP }: { icp: string, setICP: (icp: string) => void }) {
+  const [matchingICPs, setMatchingICPs] = useState<ICP[]>(stubbed);
+  
   const [isLoading, setIsLoading] = useState(false);
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -125,26 +146,27 @@ export function PasteICP({ icp, setICP }: { icp: string, setICP: (icp: string) =
     setIsLoading(true);
 
     try {
-      const res = await fetch('http://localhost:8000/search_ICP', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ content }),
-      });
-      if (!res.ok) {
-        const error = await res.json();
-        if (error.message?.includes('overloaded_error')) {
-          console.error('CHROMA is currently overloaded. Please try again in a few minutes.');
-        } else {
-          console.error('Error pulling ICP. Please try again.');
-        }
-        setIsLoading(false);
-        return;
-      }
-      const resJson = await res.json();
-      console.log("resJSON", )
-      setICP(resJson);
+      // const res = await fetch('http://localhost:8000/search_ICP', {
+      //   method: 'POST',
+      //   headers: {
+      //     'Content-Type': 'application/json',
+      //   },
+      //   body: JSON.stringify({ content }),
+      // });
+      // if (!res.ok) {
+      //   const error = await res.json();
+      //   if (error.message?.includes('overloaded_error')) {
+      //     console.error('CHROMA is currently overloaded. Please try again in a few minutes.');
+      //   } else {
+      //     console.error('Error pulling ICP. Please try again.');
+      //   }
+      //   setIsLoading(false);
+      //   return;
+      // }
+      // const resJson = await res.json();
+      // setMatchingICPs(resJson);
+      // console.log("resJSON", )
+      setICP(content);
       setIsLoading(false);
     } catch (error: any) {
       console.error("Error pulling ICP:", error)
@@ -153,7 +175,9 @@ export function PasteICP({ icp, setICP }: { icp: string, setICP: (icp: string) =
   }
 
   return (
-    <div className="flex-row rounded-lg border p-4 bg-white">
+    <div className="flex-row rounded-lg border p-4 bg-white relative overflow-hidden">
+      {/* Pattern background */}
+      <PersonBackground matchingICPs={matchingICPs} />
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="w-full space-y-6">
           <FormField
@@ -165,7 +189,7 @@ export function PasteICP({ icp, setICP }: { icp: string, setICP: (icp: string) =
                     <FormItem className="resize-none max-w-screen-md h-64 flex flex-col items-center align-center justify-center">
                     <FormControl>
                         <Input
-                        className="w-2/3 mx-auto text-center"
+                        className="w-2/3 mx-auto text-center z-10 bg-white"
                         placeholder={icp ? icp : "Enter Your ICP here."}
                         {...field}
                         />
