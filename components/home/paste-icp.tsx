@@ -145,7 +145,7 @@ export interface ICP {
 }
 
 export function PasteICP({ icp, setICP }: { icp: string, setICP: (icp: string) => void }) {
-  const [matchingICPs, setMatchingICPs] = useState<ICP[]>(stubbed);
+  const [matchingICPs, setMatchingICPs] = useState<ICP[]>([]);
   
   const [isLoading, setIsLoading] = useState(false);
   const form = useForm<z.infer<typeof FormSchema>>({
@@ -176,7 +176,6 @@ export function PasteICP({ icp, setICP }: { icp: string, setICP: (icp: string) =
       }
       const resJson = await res.json();
       setMatchingICPs(resJson);
-      console.log("resJSON", )
       setICP(content);
       setIsLoading(false);
     } catch (error: any) {

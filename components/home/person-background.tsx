@@ -1,4 +1,4 @@
-import { useRef, useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ICP } from "./paste-icp";
 import gsap from "gsap";
 import { ICPWithPopover } from "./icp-with-popover";
@@ -9,12 +9,11 @@ export function PersonBackground({ matchingICPs }: { matchingICPs: ICP[] }) {
     const iconsRef = useRef<(HTMLDivElement | null)[]>([])
     const selectedIconsRef = useRef<Set<number>>(new Set())
     const animationRef = useRef<GSAPTimeline | null>(null)
+    const [iconToICPMap, setIconToICPMap] = useState<Map<number, ICP>>(new Map())
 
     const totalIcons = 900
     const iconsToSelect = Math.min(10, matchingICPs.length)
 
-    const iconToICPMapRef = useRef<Map<number, ICP>>(new Map())
-    console.log("iconToICPMapRef", iconToICPMapRef)
     useEffect(() => {
         if (!containerRef.current || matchingICPs.length === 0) return
 
@@ -22,6 +21,9 @@ export function PersonBackground({ matchingICPs }: { matchingICPs: ICP[] }) {
         if (animationRef.current) {
             animationRef.current.kill()
         }
+        
+        // Clear the map
+        setIconToICPMap(new Map())
 
         // Reset previously selected icons
         selectedIconsRef.current.forEach(index => {
@@ -43,11 +45,15 @@ export function PersonBackground({ matchingICPs }: { matchingICPs: ICP[] }) {
         const selectedIndices = getRandomDistributedIndices(totalIcons, iconsToSelect)
         selectedIconsRef.current = new Set(selectedIndices)
 
+        console.log("BEFORE", iconToICPMap)
         // Map selected icons to specific ICPs
+        const newMap = new Map<number, ICP>()
         selectedIndices.forEach((iconIndex, i) => {
             const icpIndex = i % matchingICPs.length
-            iconToICPMapRef.current.set(iconIndex, matchingICPs[icpIndex])
+            newMap.set(iconIndex, matchingICPs[icpIndex])
         })
+        setIconToICPMap(newMap)
+        console.log("AFTER", iconToICPMap)
 
         // Create master timeline
         const masterTL = gsap.timeline()
@@ -133,7 +139,6 @@ export function PersonBackground({ matchingICPs }: { matchingICPs: ICP[] }) {
                 [...Array(30)].map((_, j) => {
                     const iconIndex = i * 30 + j
                     const isSelected = selectedIconsRef.current.has(iconIndex)
-                    const icp = iconToICPMapRef.current.get(iconIndex)
 
                     return (
                         <div
@@ -150,7 +155,7 @@ export function PersonBackground({ matchingICPs }: { matchingICPs: ICP[] }) {
                                 opacity: 0.1
                             }}
                         >
-                            {isSelected ? <ICPWithPopover icp={icp!} /> : <PersonIcon size={24} />}
+                            {isSelected ? <ICPWithPopover icp={iconToICPMap.get(iconIndex)!} /> : <PersonIcon size={24} />}
                         </div>
                     )
                 })
