@@ -15,6 +15,36 @@ client = chromadb.CloudClient(
   database=os.getenv("CHROMA_DB")
 )
 
+def format_search_results(results):
+    """
+    Format ChromaDB search results into a more readable format
+    
+    Args:
+        results (dict): ChromaDB search results containing documents, metadatas, and distances
+        
+    Returns:
+        list: List of formatted results sorted by distance (highest to lowest)
+    """
+    formatted_results = []
+    
+    # Get the first (and only) list of results from each category
+    documents = results['documents'][0]
+    metadatas = results['metadatas'][0]
+    distances = results['distances'][0]
+    
+    # Combine the results
+    for doc, meta, dist in zip(documents, metadatas, distances):
+        formatted_results.append({
+            'document': doc,
+            'metadata': meta,
+            'distance': dist
+        })
+    
+    # Sort by distance (highest to lowest)
+    formatted_results.sort(key=lambda x: x['distance'], reverse=True)
+    
+    return formatted_results
+
 @app.route('/search_ICP', methods=['POST'])
 def search_ICP():
     """
@@ -48,34 +78,3 @@ def search_ICP():
 
 if __name__ == '__main__':
     app.run(debug=True)
-
-
-def format_search_results(results):
-    """
-    Format ChromaDB search results into a more readable format
-    
-    Args:
-        results (dict): ChromaDB search results containing documents, metadatas, and distances
-        
-    Returns:
-        list: List of formatted results sorted by distance (highest to lowest)
-    """
-    formatted_results = []
-    
-    # Get the first (and only) list of results from each category
-    documents = results['documents'][0]
-    metadatas = results['metadatas'][0]
-    distances = results['distances'][0]
-    
-    # Combine the results
-    for doc, meta, dist in zip(documents, metadatas, distances):
-        formatted_results.append({
-            'document': doc,
-            'metadata': meta,
-            'distance': dist
-        })
-    
-    # Sort by distance (highest to lowest)
-    formatted_results.sort(key=lambda x: x['distance'], reverse=True)
-    
-    return formatted_results
