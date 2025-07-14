@@ -8,7 +8,6 @@ import {
 import {titleCase} from "title-case"
 
 export function ICPWithPopover({ icp }: { icp: ICPType }) {
-    console.log("icp", icp)
     const { metadata, distance, document } = icp
     const { age, sex, occupation, marital_status, education_level, bachelors_field, city, state, zipcode } = metadata
     const personaJSON = parseDocumentString(document)
@@ -19,7 +18,7 @@ export function ICPWithPopover({ icp }: { icp: ICPType }) {
                 <div className="space-y-1">
                     <h4 className="text-sm font-semibold">{titleCase(occupation)}</h4>
                     <p className="text-sm">
-                        {personaJSON["professionalRole"]}
+                        {personaJSON["professionalRole"] || personaJSON["lifestyle"] || ""}
                     </p>
                     <div className="text-muted-foreground text-xs">
                         {age}YO, {city}, {state}

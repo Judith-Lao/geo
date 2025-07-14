@@ -19,12 +19,23 @@ import { PersonBackground } from "./person-background"
 const FormSchema = z.object({
   content: z
     .string()
-    .min(5, {
-      message: "Content must be at least 5 characters.",
+    .min(10, {
+      message: "ICP description must be at least 10 characters",
     })
     .max(1000, {
-      message: "Content must not be longer than 1000 characters.",
-    }),
+      message: "ICP description must be less than 1000 characters",
+    })
+    .refine(
+      (value) => {
+        // Check if the input is not just whitespace or common filler words
+        const cleanedValue = value.trim().toLowerCase();
+        const commonFillers = ['enter', 'here', 'icp', 'description'];
+        return !commonFillers.some(word => cleanedValue === word);
+      },
+      {
+        message: "Please provide a meaningful description of your Ideal Customer Persona",
+      }
+    ),
 })
 
 const stubbed = [
@@ -146,26 +157,26 @@ export function PasteICP({ icp, setICP }: { icp: string, setICP: (icp: string) =
     setIsLoading(true);
 
     try {
-      // const res = await fetch('http://localhost:8000/search_ICP', {
-      //   method: 'POST',
-      //   headers: {
-      //     'Content-Type': 'application/json',
-      //   },
-      //   body: JSON.stringify({ content }),
-      // });
-      // if (!res.ok) {
-      //   const error = await res.json();
-      //   if (error.message?.includes('overloaded_error')) {
-      //     console.error('CHROMA is currently overloaded. Please try again in a few minutes.');
-      //   } else {
-      //     console.error('Error pulling ICP. Please try again.');
-      //   }
-      //   setIsLoading(false);
-      //   return;
-      // }
-      // const resJson = await res.json();
-      // setMatchingICPs(resJson);
-      // console.log("resJSON", )
+      const res = await fetch('http://localhost:8000/search_ICP', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ content }),
+      });
+      if (!res.ok) {
+        const error = await res.json();
+        if (error.message?.includes('overloaded_error')) {
+          console.error('CHROMA is currently overloaded. Please try again in a few minutes.');
+        } else {
+          console.error('Error pulling ICP. Please try again.');
+        }
+        setIsLoading(false);
+        return;
+      }
+      const resJson = await res.json();
+      setMatchingICPs(resJson);
+      console.log("resJSON", )
       setICP(content);
       setIsLoading(false);
     } catch (error: any) {
@@ -173,13 +184,13 @@ export function PasteICP({ icp, setICP }: { icp: string, setICP: (icp: string) =
       setIsLoading(false);
     }
   }
-
+  console.log("matchingICPs", matchingICPs)
   return (
     <div className="flex-row rounded-lg border p-4 bg-white relative overflow-hidden">
       {/* Pattern background */}
       <PersonBackground matchingICPs={matchingICPs} />
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="w-full space-y-6">
+        <form onSubmit={form.handleSubmit(onSubmit)} className="w-full space-y-6 z-50">
           <FormField
             control={form.control}
             name="content"
@@ -199,7 +210,15 @@ export function PasteICP({ icp, setICP }: { icp: string, setICP: (icp: string) =
               )}
             />
             <div className="flex-row space-x-2">
-              {isLoading ? <Button type="submit" className="">Searching<LoadingDots color="white" /></Button> : <Button type="submit" className="">Search US Census</Button>}
+              {isLoading ? (
+                <Button type="submit" className="">
+                  Searching<LoadingDots color="white" />
+                </Button>
+              ) : (
+                <Button onClick={() => onSubmit(form.getValues())} className="z-10 position-relative">
+                  Search US Census
+                </Button>
+              )}
             </div>
           </form>
         </Form>

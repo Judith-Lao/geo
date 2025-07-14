@@ -14,7 +14,7 @@ export function PersonBackground({ matchingICPs }: { matchingICPs: ICP[] }) {
     const iconsToSelect = Math.min(10, matchingICPs.length)
 
     const iconToICPMapRef = useRef<Map<number, ICP>>(new Map())
-
+    console.log("iconToICPMapRef", iconToICPMapRef)
     useEffect(() => {
         if (!containerRef.current || matchingICPs.length === 0) return
 
