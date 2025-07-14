@@ -46,7 +46,7 @@ export function PersonBackground({ matchingICPs }: { matchingICPs: ICP[] }) {
 
         // Add ripple effect before selection
         masterTL.to(iconsRef.current.filter(Boolean), {
-            duration: 1,
+            duration: 0.1,
             scale: 1.05,
             opacity: 0.2,
             ease: "power2.out",
@@ -56,7 +56,7 @@ export function PersonBackground({ matchingICPs }: { matchingICPs: ICP[] }) {
             }
         })
         .to(iconsRef.current.filter(Boolean), {
-            duration: 1,
+            duration: 0.2,
             scale: 1,
             opacity: 0.1,
             ease: "power2.out"
@@ -69,9 +69,10 @@ export function PersonBackground({ matchingICPs }: { matchingICPs: ICP[] }) {
 
             const containerRect = containerRef.current.getBoundingClientRect()
             
+            // Calculate target position (top-right grid)
             const targetX = containerRect.width - 40 - (animationIndex % 5) * 35  // 5 per row
-            const targetY = 20 + Math.floor(animationIndex / 5) * 35     
-            
+            const targetY = 20 + Math.floor(animationIndex / 5) * 35
+
             // Get current position
             const iconRect = icon.getBoundingClientRect()
             const deltaX = targetX - (iconRect.left - containerRect.left)
