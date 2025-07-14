@@ -1,7 +1,8 @@
 import { useRef, useEffect } from "react";
-import { PersonIcon } from "../icons/person";
 import { ICP } from "./paste-icp";
 import gsap from "gsap";
+import { ICPWithPopover } from "./icp-with-popover";
+import { PersonIcon } from "../icons/person";
 
 export function PersonBackground({ matchingICPs }: { matchingICPs: ICP[] }) {
     const containerRef = useRef<HTMLDivElement>(null)
@@ -11,6 +12,8 @@ export function PersonBackground({ matchingICPs }: { matchingICPs: ICP[] }) {
 
     const totalIcons = 900
     const iconsToSelect = Math.min(10, matchingICPs.length)
+
+    const iconToICPMapRef = useRef<Map<number, ICP>>(new Map())
 
     useEffect(() => {
         if (!containerRef.current || matchingICPs.length === 0) return
@@ -24,10 +27,10 @@ export function PersonBackground({ matchingICPs }: { matchingICPs: ICP[] }) {
         selectedIconsRef.current.forEach(index => {
             const icon = iconsRef.current[index]
             if (icon) {
-                gsap.set(icon, { 
-                    x: 0, 
-                    y: 0, 
-                    scale: 1, 
+                gsap.set(icon, {
+                    x: 0,
+                    y: 0,
+                    scale: 1,
                     opacity: 0.1,
                     zIndex: 1,
                     rotation: 0
@@ -39,6 +42,12 @@ export function PersonBackground({ matchingICPs }: { matchingICPs: ICP[] }) {
         // Select random icons with better distribution
         const selectedIndices = getRandomDistributedIndices(totalIcons, iconsToSelect)
         selectedIconsRef.current = new Set(selectedIndices)
+
+        // Map selected icons to specific ICPs
+        selectedIndices.forEach((iconIndex, i) => {
+            const icpIndex = i % matchingICPs.length
+            iconToICPMapRef.current.set(iconIndex, matchingICPs[icpIndex])
+        })
 
         // Create master timeline
         const masterTL = gsap.timeline()
@@ -55,12 +64,12 @@ export function PersonBackground({ matchingICPs }: { matchingICPs: ICP[] }) {
                 from: "random"
             }
         })
-        .to(iconsRef.current.filter(Boolean), {
-            duration: 0.2,
-            scale: 1,
-            opacity: 0.1,
-            ease: "power2.out"
-        }, "-=0.2")
+            .to(iconsRef.current.filter(Boolean), {
+                duration: 0.2,
+                scale: 1,
+                opacity: 0.1,
+                ease: "power2.out"
+            }, "-=0.2")
 
         // Animate selected icons
         selectedIndices.forEach((iconIndex, animationIndex) => {
@@ -68,7 +77,7 @@ export function PersonBackground({ matchingICPs }: { matchingICPs: ICP[] }) {
             if (!icon || !containerRef.current) return
 
             const containerRect = containerRef.current.getBoundingClientRect()
-            
+
             // Calculate target position (top-right grid)
             const targetX = containerRect.width - 40 - (animationIndex % 5) * 35  // 5 per row
             const targetY = 20 + Math.floor(animationIndex / 5) * 35
@@ -80,32 +89,32 @@ export function PersonBackground({ matchingICPs }: { matchingICPs: ICP[] }) {
 
             // Add to timeline
             masterTL.set(icon, { zIndex: 100 }, 0.5 + animationIndex * 0.05)
-                    .to(icon, {
-                        duration: 0.2,
-                        scale: 1.3,
-                        opacity: 0.9,
-                        rotation: 5,
-                        ease: "back.out(1.7)"
-                    }, 0.5 + animationIndex * 0.05)
-                    .to(icon, {
-                        duration: 1,
-                        x: deltaX,
-                        y: deltaY,
-                        scale: 1.1,
-                        opacity: 1,
-                        rotation: 0,
-                        ease: "power2.inOut"
-                    }, 0.6 + animationIndex * 0.05)
-                    .to(icon, {
-                        duration: 0.3,
-                        scale: 1.2,
-                        ease: "elastic.out(1, 0.5)"
-                    })
-                    .to(icon, {
-                        duration: 0.2,
-                        scale: 1.1,
-                        ease: "power2.out"
-                    })
+                .to(icon, {
+                    duration: 0.2,
+                    scale: 1.3,
+                    opacity: 0.9,
+                    rotation: 5,
+                    ease: "back.out(1.7)"
+                }, 0.5 + animationIndex * 0.05)
+                .to(icon, {
+                    duration: 1,
+                    x: deltaX,
+                    y: deltaY,
+                    scale: 1.1,
+                    opacity: 1,
+                    rotation: 0,
+                    ease: "power2.inOut"
+                }, 0.6 + animationIndex * 0.05)
+                .to(icon, {
+                    duration: 0.3,
+                    scale: 1.2,
+                    ease: "elastic.out(1, 0.5)"
+                })
+                .to(icon, {
+                    duration: 0.2,
+                    scale: 1.1,
+                    ease: "power2.out"
+                })
         })
 
         return () => {
@@ -116,7 +125,7 @@ export function PersonBackground({ matchingICPs }: { matchingICPs: ICP[] }) {
     }, [matchingICPs])
 
     return (
-        <div 
+        <div
             ref={containerRef}
             className="absolute inset-0 flex flex-wrap -m-1 overflow-hidden"
         >
@@ -124,29 +133,29 @@ export function PersonBackground({ matchingICPs }: { matchingICPs: ICP[] }) {
                 [...Array(30)].map((_, j) => {
                     const iconIndex = i * 30 + j
                     const isSelected = selectedIconsRef.current.has(iconIndex)
-                    
+                    const icp = iconToICPMapRef.current.get(iconIndex)
+
                     return (
                         <div
                             key={`${i}-${j}`}
                             ref={(el) => {
                                 iconsRef.current[iconIndex] = el
                             }}
-                            className={`m-1 relative transition-colors duration-300 ${
-                                isSelected ? 'text-blue-500' : 'text-gray-400'
-                            }`}
-                            style={{ 
-                                width: 24, 
+                            className={`m-1 relative transition-colors duration-300 ${isSelected ? 'text-blue-500 cursor-pointer' : 'text-gray-400'
+                                }`}
+                            style={{
+                                width: 24,
                                 height: 24,
                                 transformOrigin: 'center center',
                                 opacity: 0.1
                             }}
                         >
-                            <PersonIcon size={24} />
+                            {isSelected ? <ICPWithPopover icp={icp!} /> : <PersonIcon size={24} />}
                         </div>
                     )
                 })
             )}
-        </div>
+        </div >
     )
 }
 
@@ -157,17 +166,17 @@ function getRandomDistributedIndices(total: number, count: number): number[] {
     const gridSize = Math.sqrt(total) // 30 for a 30x30 grid
     const sections = Math.ceil(Math.sqrt(count))
     const sectionSize = Math.floor(gridSize / sections)
-    
+
     for (let i = 0; i < count; i++) {
         const sectionX = (i % sections) * sectionSize
         const sectionY = Math.floor(i / sections) * sectionSize
-        
+
         const randomX = sectionX + Math.floor(Math.random() * sectionSize)
         const randomY = sectionY + Math.floor(Math.random() * sectionSize)
-        
+
         const index = Math.min(randomY * gridSize + randomX, total - 1)
         indices.push(index)
     }
-    
+
     return indices
 }
