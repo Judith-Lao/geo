@@ -133,7 +133,7 @@ export function PersonBackground({ matchingICPs }: { matchingICPs: ICP[] }) {
     return (
         <div
             ref={containerRef}
-            className="absolute inset-0 flex flex-wrap -m-1 overflow-hidden pointer-events-none"
+            className="absolute inset-0 flex flex-wrap -m-1 overflow-hidden"
         >
             {[...Array(30)].map((_, i) =>
                 [...Array(30)].map((_, j) => {

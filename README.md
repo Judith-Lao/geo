@@ -15,6 +15,7 @@ Paste in marketing content (blogs, articles, etc.), get back recommendations on 
 ### Screen 2 (DONE)
 
 ![Screen 2](public/screen2.png)
+![Screen 3](public/screen3.png)
 
 Explain which personas the content is meant for, get back similar personas to the one you explained, grounded in US Census Data.
 
