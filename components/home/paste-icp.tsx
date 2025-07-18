@@ -199,7 +199,7 @@ export function PasteICP({ icp, setICP }: { icp: string, setICP: (icp: string) =
                     <FormItem className="resize-none max-w-screen-md h-64 flex flex-col items-center align-center justify-center">
                     <FormControl>
                         <Input
-                        className="w-2/3 mx-auto text-center z-10 bg-white"
+                        className="w-2/3 mx-auto text-center z-50 bg-white"
                         placeholder={icp ? icp : "Enter Your ICP here."}
                         {...field}
                         />
@@ -214,13 +214,13 @@ export function PasteICP({ icp, setICP }: { icp: string, setICP: (icp: string) =
                   Searching<LoadingDots color="white" />
                 </Button>
               ) : (
-                <Button type="submit" className="z-200 position-relative">
+                <Button type="submit" className="z-50 position-relative">
                   Search US Census
                 </Button>
               )}
             </div>
           </form>
-        </Form>
+      </Form>
     </div>
   )
 }
