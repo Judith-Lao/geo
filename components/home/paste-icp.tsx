@@ -214,7 +214,7 @@ export function PasteICP({ icp, setICP }: { icp: string, setICP: (icp: string) =
                   Searching<LoadingDots color="white" />
                 </Button>
               ) : (
-                <Button onClick={() => onSubmit(form.getValues())} className="z-10 position-relative">
+                <Button type="submit" className="z-200 position-relative">
                   Search US Census
                 </Button>
               )}

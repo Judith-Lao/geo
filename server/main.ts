@@ -203,6 +203,30 @@ app.post('/assign_fluency_score', async (req, res) => {
     }
 })
 
+app.post('/search_ICP', async (req, res) => {
+    console.log("[Route] /search_ICP")
+    try {
+        const { content } = req.body;
+        if (!content) {
+            console.error("No content in request body")
+            return res.status(400).json({ error: "Content is required" })
+        }
+        const results = await fetch('http://127.0.0.1:5000/search_ICP', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ content }),
+        })
+        const resJson = await results.json()
+        res.send(resJson)
+    }
+    catch (error) {
+        console.error("Error in route handler:", error)
+        res.status(500).json({ error: "Internal server error" })
+    }
+})
+
 app.listen(port, () => {
     console.log(`Listening on port ${port}`)
 })
