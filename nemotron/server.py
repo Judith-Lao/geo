@@ -10,9 +10,9 @@ load_dotenv()
 app = Flask(__name__)
 
 client = chromadb.CloudClient(
-  api_key=os.getenv("CHROMA_API_KEY"),
-  tenant=os.getenv("CHROMA_TENANT_ID"),
-  database=os.getenv("CHROMA_DB")
+    api_key=os.getenv("CHROMA_API_KEY"),
+    tenant=os.getenv("CHROMA_TENANT_ID"),
+    database=os.getenv("CHROMA_DB")
 )
 
 def format_search_results(results):
