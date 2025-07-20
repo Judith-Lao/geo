@@ -189,7 +189,7 @@ export function PasteICP({ icp, setICP }: { icp: string, setICP: (icp: string) =
       {/* Pattern background */}
       <PersonBackground matchingICPs={matchingICPs} />
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="w-full space-y-6 z-50">
+        <form onSubmit={form.handleSubmit(onSubmit)} className="w-full z-50 relative space-y-6">
           <FormField
             control={form.control}
             name="content"
@@ -199,7 +199,7 @@ export function PasteICP({ icp, setICP }: { icp: string, setICP: (icp: string) =
                     <FormItem className="resize-none max-w-screen-md h-64 flex flex-col items-center align-center justify-center">
                     <FormControl>
                         <Input
-                        className="w-2/3 mx-auto text-center z-50 bg-white"
+                        className="w-2/3 mx-auto text-center bg-white"
                         placeholder={icp ? icp : "Enter Your ICP here."}
                         {...field}
                         />
@@ -210,11 +210,11 @@ export function PasteICP({ icp, setICP }: { icp: string, setICP: (icp: string) =
             />
             <div className="flex-row space-x-2">
               {isLoading ? (
-                <Button type="submit" className="">
+                <Button type="submit">
                   Searching<LoadingDots color="white" />
                 </Button>
               ) : (
-                <Button type="submit" className="z-50 position-relative">
+                <Button type="submit">
                   Search US Census
                 </Button>
               )}
