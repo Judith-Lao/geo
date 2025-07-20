@@ -14,9 +14,7 @@ export function PersonBackground({ matchingICPs }: { matchingICPs: ICP[] }) {
     const totalIcons = 900
     const iconsToSelect = Math.min(10, matchingICPs.length)
 
-    useEffect(() => {
-        if (!containerRef.current || matchingICPs.length === 0) return
-
+    const reset = () => {
         // Kill any existing animations
         if (animationRef.current) {
             animationRef.current.kill()
@@ -40,6 +38,11 @@ export function PersonBackground({ matchingICPs }: { matchingICPs: ICP[] }) {
             }
         })
         selectedIconsRef.current.clear()
+    }
+    useEffect(() => {
+        if (!containerRef.current || matchingICPs.length === 0) return
+
+        reset()
 
         // Select random icons with better distribution
         const selectedIndices = getRandomDistributedIndices(totalIcons, iconsToSelect)
